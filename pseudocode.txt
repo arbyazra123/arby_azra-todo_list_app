@@ -1,0 +1,79 @@
+BEGIN INITIALIZATION
+
+    CLASS Todo
+        content : Text
+        level : Number #property untuk menyimpan seberapa penting Todo (low -> 0, medium -> 1, high -> 2)
+    END CLASS
+
+    PROCEDURE ShowTodos("todos": List of Todo Class) : Output List of Todo
+        FOR "i" from 1 in "todos"
+            PRINT "i+1" #Tampilkan nomor todo
+            PRINT "todos"["i"]."content"
+            PRINT "todos"["i"]."level"
+        END FOR
+    END PROCEDURE
+
+    PROCEDURE AddTodo("newContent": Text, "newLevel": number, "todos": List of Todo Class) : Output List of added Todo
+        INITIALIZE "todo"
+        STORE "todo"."content" WITH "newContent"
+        STORE "todo"."level" WITH "newLevel"
+
+        STORE "todos" with new "todo"
+        return todos
+    END PROCEDURE
+
+    PROCEDURE UpdateTodo("editedContent": Text, "editedLevel": number,"todos": List of Todo Class, "location": number #lokasi Todo di dalam berupa index) : Output List of updated Todo
+        INITIALIZE "todo"
+        STORE "todo"."content" WITH "editedContent"
+        STORE "todo"."level" WITH "editedLevel"
+
+        REMOVE "todos" at "location" index of list
+        STORE "todos" with new "todo"
+        return todos
+    END PROCEDURE
+
+    PROCEDURE DeleteTodo("location": number #lokasi Todo di dalam berupa index) : Output List of updated Todo
+        REMOVE "todos" at "location" index of list
+        return todos
+    END PROCEDURE
+
+END INITIALIZATION
+
+PROGRAM BEGIN
+    STORE "todos" with empty list -> []
+
+    CALL PROCEDURE "ShowTodos" with input : #Tampilkan isi larik Todo di awal
+        todos = "todos" #Ambil dari variabel todos yang sudah diisi di atas
+    
+    CALL PROCEDURE "AddTodo" with input :
+        newContent = "Olahraga di Jam 7", 
+        newLevel = "2", #Level 2 yang artinya memiliki kepentingan level HIGH
+        todos = "todos"
+
+    CALL PROCEDURE "ShowTodos" with input : #Tampilkan isi larik Todo yang baru ditambah item
+        todos = "todos" #Ambil dari variabel todos yang sudah diisi di atas    
+
+    CALL PROCEDURE "AddTodo" with input :
+        newContent = "Makan Bubur di Alun Alun", 
+        newLevel = "0", 
+        todos = "todos"
+
+    CALL PROCEDURE "ShowTodos" with input : #Tampilkan isi larik Todo dengan 2 item baru
+        todos = "todos" #Ambil dari variabel todos yang sudah diisi di atas    
+
+    CALL PROCEDURE "UpdateTodo" with input :
+        newContent = "Mandi di Jam 8", 
+        newLevel = "1", 
+        location = "1", #Ubah Todo pada index ke-1 atau element ke-2 pada "todos"
+        todos = "todos"
+
+    CALL PROCEDURE "ShowTodos" with input : #Tampilkan isi larik Todo setelah item ke-2 diubah
+        todos = "todos" #Ambil dari variabel todos yang sudah diisi di atas    
+
+    CALL PROCEDURE "UpdateTodo" with input :
+        location = "1"
+
+    CALL PROCEDURE "ShowTodos" with input : #Tampilkan isi larik Todo setelah item terakhir dihapus
+        todos = "todos" #Ambil dari variabel todos yang sudah diisi di atas 
+
+END BEGIN
